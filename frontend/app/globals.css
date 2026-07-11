@@ -2,37 +2,42 @@
 
 @theme {
   /* ── Canvas ── */
-  --color-bg:             #0A0B0D;   /* near-black base */
-  --color-surface:        #111318;   /* card background */
-  --color-surface-raised: #181C23;   /* elevated card (modals, dropdowns) */
-  --color-surface-sunken: #0D0F13;   /* input fields, inset areas */
+  --color-bg:             #FFFFFF;   /* crisp white base */
+  --color-surface:        #F6F6F4;   /* card background */
+  --color-surface-raised: #FFFFFF;   /* elevated card (modals, dropdowns) */
+  --color-surface-sunken: #EFEFEC;   /* input fields, inset areas */
 
   /* ── Borders ── */
-  --color-border:         rgba(255,255,255,0.07);
-  --color-border-strong:  rgba(255,255,255,0.14);
+  --color-border:         rgba(11,13,16,0.08);
+  --color-border-strong:  rgba(11,13,16,0.16);
 
   /* ── Ink ── */
-  --color-ink:            #F0F2F5;   /* primary text */
-  --color-ink-muted:      #8B909A;   /* secondary text */
-  --color-ink-faint:      #4A4F5C;   /* placeholder, captions */
+  --color-ink:            #0B0D10;   /* primary text — near-black for intensity */
+  --color-ink-muted:      #565C66;   /* secondary text */
+  --color-ink-faint:      #9297A0;   /* placeholder, captions */
 
   /* ── Gold accent (primary actions only) ── */
-  --color-accent:         #C9971F;
-  --color-accent-bright:  #DBA827;
-  --color-accent-soft:    rgba(201,151,31,0.12);
-  --color-accent-border:  rgba(201,151,31,0.25);
+  --color-accent:         #9C6B12;
+  --color-accent-bright:  #B47D17;
+  --color-accent-soft:    rgba(156,107,18,0.10);
+  --color-accent-border:  rgba(156,107,18,0.28);
 
   /* ── Trust / structural ── */
-  --color-trust:          #4B6BF5;   /* links, active states */
-  --color-trust-soft:     rgba(75,107,245,0.10);
+  --color-trust:          #2F4FD1;   /* links, active states */
+  --color-trust-soft:     rgba(47,79,209,0.08);
 
   /* ── Status ── */
-  --color-success:        #22C55E;
-  --color-success-soft:   rgba(34,197,94,0.10);
-  --color-warning:        #F59E0B;
-  --color-warning-soft:   rgba(245,158,11,0.10);
-  --color-danger:         #EF4444;
-  --color-danger-soft:    rgba(239,68,68,0.10);
+  --color-success:        #16824A;
+  --color-success-soft:   rgba(22,130,74,0.10);
+  --color-warning:        #A6650A;
+  --color-warning-soft:   rgba(166,101,10,0.10);
+  --color-danger:         #C7362A;
+  --color-danger-soft:    rgba(199,54,42,0.09);
+
+  /* ── Inverted surface (used sparingly for high-contrast plaques/cards) ── */
+  --color-invert-bg:      #12141A;
+  --color-invert-ink:     #F2EEE4;
+  --color-invert-line:    rgba(255,255,255,0.12);
 
   /* ── Fonts ── */
   --font-display: 'Fraunces', Georgia, serif;
@@ -56,10 +61,10 @@
   --radius-pill: 9999px;
 
   /* ── Shadows ── */
-  --shadow-card:     0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
-  --shadow-raised:   0 4px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.07);
-  --shadow-glow-gold: 0 0 32px rgba(201,151,31,0.15);
-  --shadow-dropdown: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08);
+  --shadow-card:     0 1px 2px rgba(16,24,40,0.04), 0 1px 3px rgba(16,24,40,0.05), 0 0 0 1px rgba(16,24,40,0.04);
+  --shadow-raised:   0 16px 40px rgba(16,24,40,0.10), 0 0 0 1px rgba(16,24,40,0.06);
+  --shadow-glow-gold: 0 0 0 4px rgba(156,107,18,0.14);
+  --shadow-dropdown: 0 20px 56px rgba(16,24,40,0.14), 0 0 0 1px rgba(16,24,40,0.07);
 }
 
 /* ── Layout ── */
@@ -110,7 +115,7 @@
   gap: 8px;
   padding: 12px 24px;
   background: var(--color-accent);
-  color: #0A0B0D;
+  color: #FFFFFF;
   font-family: var(--font-ui);
   font-weight: 600;
   font-size: 0.9375rem;
@@ -126,7 +131,7 @@
 }
 .btn-primary:active { transform: scale(0.98); }
 .btn-primary:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
@@ -149,8 +154,8 @@
   transition: background 0.15s ease, border-color 0.15s ease;
 }
 .btn-secondary:hover {
-  background: rgba(255,255,255,0.05);
-  border-color: rgba(255,255,255,0.22);
+  background: rgba(11,13,16,0.04);
+  border-color: rgba(11,13,16,0.26);
 }
 .btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
 
@@ -173,7 +178,7 @@
 .btn-ghost:hover {
   color: var(--color-ink);
   border-color: var(--color-border-strong);
-  background: rgba(255,255,255,0.03);
+  background: rgba(11,13,16,0.03);
 }
 
 /* ── Inputs ── */
@@ -270,14 +275,14 @@
 }
 .badge-active    { background: var(--color-success-soft); color: var(--color-success); }
 .badge-locked    { background: var(--color-warning-soft); color: var(--color-warning); }
-.badge-completed { background: rgba(75,107,245,0.12); color: var(--color-trust); }
+.badge-completed { background: rgba(47,79,209,0.10); color: var(--color-trust); }
 .badge-refunded  { background: var(--color-warning-soft); color: var(--color-warning); }
 .badge-disputed  { background: var(--color-danger-soft);  color: var(--color-danger);  }
 .badge-created           { background: var(--color-accent-soft);  color: var(--color-accent);  }
 .badge-funded            { background: var(--color-trust-soft);   color: var(--color-trust);   }
 .badge-released          { background: var(--color-success-soft); color: var(--color-success); }
 .badge-partially-released{ background: var(--color-warning-soft); color: var(--color-warning); }
-.badge-resolved          { background: rgba(75,107,245,0.12);     color: var(--color-trust);   }
+.badge-resolved          { background: rgba(47,79,209,0.10);      color: var(--color-trust);   }
 .badge-pending    { background: var(--color-warning-soft); color: var(--color-warning); }
 .badge-processing { background: var(--color-accent-soft);  color: var(--color-accent);  }
 .badge-confirmed  { background: var(--color-success-soft); color: var(--color-success); }
@@ -291,7 +296,7 @@
 .skeleton {
   background: linear-gradient(90deg,
     var(--color-surface) 25%,
-    var(--color-surface-raised) 50%,
+    #E9E9E5 50%,
     var(--color-surface) 75%
   );
   background-size: 800px 100%;
@@ -320,17 +325,17 @@
   border-radius: var(--radius-md);
   transition: color 0.15s ease, background 0.15s ease;
 }
-.nav-item:hover { color: var(--color-ink); background: rgba(255,255,255,0.04); }
+.nav-item:hover { color: var(--color-ink); background: rgba(11,13,16,0.04); }
 .nav-item-active {
   color: var(--color-ink);
-  background: rgba(255,255,255,0.07);
+  background: rgba(11,13,16,0.06);
 }
 
 /* ── Gold divider line ── */
 .gold-line {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
-  opacity: 0.4;
+  opacity: 0.5;
 }
 
 /* ── Seal icon animations ── */
