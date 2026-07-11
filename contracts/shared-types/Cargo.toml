@@ -1,0 +1,19 @@
+[package]
+name = "lumenlock-shared-types"
+version = "0.1.0"
+edition = "2021"
+publish = false
+authors = ["dev-rps"]
+repository = "https://github.com/dev-rps/lumenlock"
+
+[lib]
+crate-type = ["rlib"]
+
+[features]
+testutils = ["soroban-sdk/testutils"]
+
+[dependencies]
+soroban-sdk = { workspace = true }
+
+[dev-dependencies]
+soroban-sdk = { workspace = true }
