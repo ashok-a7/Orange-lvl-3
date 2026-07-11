@@ -1,7 +1,43 @@
 'use client';
 
-import { AlertTriangle, RefreshCcw, Home } from 'lucide-react';
+import { useEffect } from 'react';
+import { RefreshCcw, Home } from 'lucide-react';
 import Link from 'next/link';
+
+/** A cracked wax seal — the signature confirmation mark, broken. */
+function BrokenSeal({ size = 120 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 120 120" fill="none" aria-hidden="true">
+      <circle cx="60" cy="60" r="52" stroke="var(--color-danger)" strokeOpacity="0.22" strokeWidth="1.5" />
+      <circle cx="60" cy="60" r="44" stroke="var(--color-danger)" strokeOpacity="0.14" strokeWidth="1.5" />
+      {/* Left half of the seal, sheared away */}
+      <path
+        d="M 44 25 A 36 36 0 0 0 44 95"
+        stroke="var(--color-ink-faint)"
+        strokeWidth="6"
+        strokeLinecap="round"
+        transform="translate(-5, -3) rotate(-6 60 60)"
+      />
+      {/* Right half, sheared the other way */}
+      <path
+        d="M 76 25 A 36 36 0 0 1 76 95"
+        stroke="var(--color-danger)"
+        strokeWidth="6"
+        strokeLinecap="round"
+        transform="translate(5, 3) rotate(6 60 60)"
+      />
+      {/* Fracture line down the middle */}
+      <path
+        d="M 60 20 L 65 42 L 54 58 L 66 76 L 58 100"
+        stroke="var(--color-danger)"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.75"
+      />
+    </svg>
+  );
+}
 
 export default function Error({
   error,
@@ -10,91 +46,56 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.error('[LumenLock] Unhandled render error:', error);
+  }, [error]);
+
   return (
-    <div className="min-h-[70vh] flex items-center justify-center" style={{ paddingTop: 'var(--spacing-6)', paddingBottom: 'var(--spacing-6)' }}>
-      <div className="text-center flex flex-col items-center" style={{ gap: 'var(--spacing-4)', maxWidth: '50ch' }}>
-        {/* Error Icon */}
-        <div
-          style={{
-            width: 80,
-            height: 80,
-            borderRadius: '50%',
-            backgroundColor: 'var(--color-danger-soft)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-          }}
-        >
-          <AlertTriangle style={{ width: 40, height: 40, color: 'var(--color-danger)' }} />
+    <div className="min-h-[76vh] flex items-center justify-center relative overflow-hidden" style={{ padding: 'var(--spacing-4)' }}>
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(ellipse 60% 50% at 50% 40%, var(--color-danger-soft), transparent 70%)',
+          pointerEvents: 'none',
+        }}
+      />
+      <div className="text-center flex flex-col items-center relative" style={{ gap: 'var(--spacing-2)', maxWidth: '44ch' }}>
+        <div style={{ marginBottom: 'var(--spacing-1)' }}>
+          <BrokenSeal />
         </div>
 
-        {/* Error Title */}
-        <div>
-          <p className="type-caption" style={{ color: 'var(--color-danger)', marginBottom: 'var(--spacing-1)' }}>
-            ERROR OCCURRED
-          </p>
-          <h1 className="type-display-lg" style={{ color: 'var(--color-ink)' }}>
-            Something went wrong
-          </h1>
-        </div>
-
-        {/* Error Message */}
-        <p className="type-body" style={{ color: 'var(--color-ink-muted)', lineHeight: 1.7 }}>
-          {error.message || 'An unexpected error occurred. Our team has been notified. Please try again or contact support.'}
+        <p className="type-eyebrow" style={{ color: 'var(--color-danger)', justifyContent: 'center' }}>
+          Seal verification failed
         </p>
 
-        {/* Error Digest */}
+        <h1 className="type-display-lg" style={{ color: 'var(--color-ink)' }}>
+          Something broke the chain of trust
+        </h1>
+
+        <p className="type-body-sm" style={{ color: 'var(--color-ink-muted)' }}>
+          {error.message || 'The page hit an unexpected error before it could render. No funds or contract state were affected.'}
+        </p>
+
         {error.digest && (
-          <div
-            style={{
-              backgroundColor: 'var(--color-surface)',
-              border: '1px solid var(--color-border)',
-              borderRadius: 'var(--radius-md)',
-              padding: 'var(--spacing-2)',
-              width: '100%',
-              textAlign: 'left',
-            }}
-          >
-            <p className="type-caption" style={{ color: 'var(--color-ink-faint)', marginBottom: 'var(--spacing-1)' }}>
-              Error ID
-            </p>
-            <code
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.8rem',
-                color: 'var(--color-ink-muted)',
-                wordBreak: 'break-all',
-              }}
-            >
-              {error.digest}
-            </code>
-          </div>
+          <p className="type-mono-sm" style={{ color: 'var(--color-ink-faint)', marginTop: '-6px' }}>
+            Reference: {error.digest}
+          </p>
         )}
 
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3 w-full" style={{ marginTop: 'var(--spacing-2)' }}>
-          <button
-            onClick={reset}
-            className="btn-primary flex-1"
-            style={{ justifyContent: 'center' }}
-          >
-            <RefreshCcw style={{ width: 17, height: 17 }} />
+        <div className="flex items-center gap-3 flex-wrap justify-center" style={{ marginTop: 'var(--spacing-2)' }}>
+          <button onClick={reset} className="btn-primary" id="error-reset-btn">
+            <RefreshCcw style={{ width: 15, height: 15 }} />
             Try Again
           </button>
-          <Link href="/" className="btn-secondary flex-1" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
-            <Home style={{ width: 17, height: 17 }} />
-            Go Home
+          <Link href="/" className="btn-secondary" id="error-home-btn">
+            <Home style={{ width: 15, height: 15 }} />
+            Back to Home
           </Link>
         </div>
       </div>
-
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.7; }
-        }
-      `}</style>
     </div>
   );
 }
