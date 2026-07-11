@@ -17,7 +17,7 @@ const features = [
     title: 'Bilateral Confirmation',
     description: 'Funds release only when BOTH buyer and seller independently confirm. No single point of trust.',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
         <circle cx="9" cy="12" r="6" /><circle cx="15" cy="12" r="6" />
       </svg>
     ),
@@ -27,7 +27,7 @@ const features = [
     title: 'Milestone Releases',
     description: 'Split payments across project milestones — 30% on start, 70% on delivery, configurable per listing.',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <line x1="5" y1="4" x2="5" y2="20" /><polyline points="5,4 19,4 15,10 19,16 5,16" />
       </svg>
     ),
@@ -37,7 +37,7 @@ const features = [
     title: 'Deadline Protection',
     description: 'If the seller goes silent, the buyer gets a full refund after the 7-day deadline. Nothing locked forever.',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
         <circle cx="12" cy="12" r="8" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="12" x2="15" y2="14" />
       </svg>
     ),
@@ -47,7 +47,7 @@ const features = [
     title: 'Dispute Arbitration',
     description: 'Disputes freeze funds and route to a designated arbiter. Resolution credits the winner automatically.',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <line x1="12" y1="4" x2="12" y2="20" /><line x1="4" y1="8" x2="20" y2="8" />
         <path d="M4,8 Q2,12 4,16 Q6,12 4,8" /><path d="M20,8 Q22,12 20,16 Q18,12 20,8" />
         <line x1="8" y1="20" x2="16" y2="20" />
@@ -59,7 +59,7 @@ const features = [
     title: 'Multi-Asset Support',
     description: 'Accept XLM, USDC, or any Stellar Asset Contract token. Any SEP-41 compliant asset works out of the box.',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
         <ellipse cx="12" cy="7" rx="7" ry="2.5" />
         <path d="M5,7 Q5,11 12,11 Q19,11 19,7" /><path d="M5,11 Q5,15 12,15 Q19,15 19,11" /><path d="M5,15 Q5,19 12,19 Q19,19 19,15" />
       </svg>
@@ -70,7 +70,7 @@ const features = [
     title: 'Composable Primitives',
     description: 'Built as a reusable Soroban escrow layer. Any marketplace or P2P app on Stellar can build on top of it.',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="12,3 21,8.5 12,14 3,8.5 12,3" /><line x1="3" y1="13.5" x2="12" y2="19" /><line x1="21" y1="13.5" x2="12" y2="19" />
       </svg>
     ),
@@ -141,6 +141,23 @@ function FeatureItem({ feature, delay }: { feature: (typeof features)[number]; d
   );
 }
 
+// ─── How It Works Step ──────────────────────────────────────────────────────
+function HowItWorksStep({ item, index }: { item: (typeof howItWorks)[number]; index: number }) {
+  const { ref, visible } = useScrollReveal(0.2);
+  return (
+    <div ref={ref} className={`${visible ? 'll-fade-up' : 'll-hidden'}`} style={{ animationDelay: `${index * 100}ms` }}>
+      <div className="ll-card" style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: 'var(--spacing-4)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', marginBottom: 'var(--spacing-3)' }}>
+          <span className="type-mono" style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--color-accent)' }}>{item.step}</span>
+          {item.sealed && <Seal size={32} active={true} tone="accent" />}
+        </div>
+        <h3 className="type-heading" style={{ color: 'var(--color-ink)', marginBottom: 'var(--spacing-2)' }}>{item.title}</h3>
+        <p className="type-body-sm" style={{ color: 'var(--color-ink-muted)', flex: 1 }}>{item.description}</p>
+      </div>
+    </div>
+  );
+}
+
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function LandingPage() {
   const [heroVisible, setHeroVisible] = useState(false);
@@ -154,34 +171,42 @@ export default function LandingPage() {
 
   return (
     <div className="overflow-hidden" style={{ background: 'var(--color-bg)' }}>
-      {/* ── Hero ────────────────────────────────────────────────────────────── */}
+      {/* ── Hero Section ────────────────────────────────────────────────────────────── */}
       <section className="relative" style={{ paddingTop: 'var(--spacing-12)', paddingBottom: 'var(--spacing-12)' }}>
         <div className="ll-hero-grid" aria-hidden="true" />
         <div className="container-wide relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 items-center" style={{ gap: 'var(--spacing-8)' }}>
-            {/* Left: copy */}
+            {/* Left: Hero Copy */}
             <div>
-              <p className={`type-caption ll-fade-slot ${heroVisible ? 'll-in' : ''}`} style={{ color: 'var(--color-accent)', marginBottom: 'var(--spacing-2)', transitionDelay: '0ms' }}>
+              <p className={`type-caption ll-fade-slot ${heroVisible ? 'll-in' : ''}`} style={{ color: 'var(--color-accent)', marginBottom: 'var(--spacing-3)', transitionDelay: '0ms' }}>
                 SOROBAN SMART CONTRACT · STELLAR NETWORK
               </p>
 
-              <h1 className={`type-display-xl ll-fade-slot ${heroVisible ? 'll-in' : ''}`} style={{ color: 'var(--color-ink)', maxWidth: '15ch', marginBottom: 'var(--spacing-3)', transitionDelay: '80ms' }}>
+              <h1 className={`type-display-xl ll-fade-slot ${heroVisible ? 'll-in' : ''}`} style={{ color: 'var(--color-ink)', maxWidth: '15ch', marginBottom: 'var(--spacing-4)', transitionDelay: '80ms' }}>
                 Escrow, <em style={{ fontStyle: 'italic', color: 'var(--color-accent)' }}>sealed</em> on-chain.
               </h1>
 
-              <p className={`type-body ll-fade-slot ${heroVisible ? 'll-in' : ''}`} style={{ color: 'var(--color-ink-muted)', maxWidth: '52ch', marginBottom: 'var(--spacing-4)', transitionDelay: '160ms' }}>
-                LumenLock brings bilateral confirmation, milestone-based release, and dispute
-                arbitration to the Stellar ecosystem — the escrow primitive every P2P
-                marketplace has been missing.
+              <p className={`type-body ll-fade-slot ${heroVisible ? 'll-in' : ''}`} style={{ color: 'var(--color-ink-muted)', maxWidth: '52ch', marginBottom: 'var(--spacing-6)', transitionDelay: '160ms', lineHeight: 1.7 }}>
+                LumenLock brings bilateral confirmation, milestone-based release, and dispute arbitration to the Stellar ecosystem — the escrow primitive every P2P marketplace has been missing.
               </p>
 
-              <div className={`flex flex-col sm:flex-row gap-3 ll-fade-slot ${heroVisible ? 'll-in' : ''}`} style={{ transitionDelay: '240ms' }}>
-                <Link href="/marketplace" className="btn-primary" id="explore-marketplace-btn">Explore Marketplace →</Link>
-                <Link href="/dashboard" className="btn-secondary" id="open-dashboard-btn">Open Dashboard</Link>
+              <div className={`flex flex-col sm:flex-row gap-4 ll-fade-slot ${heroVisible ? 'll-in' : ''}`} style={{ transitionDelay: '240ms' }}>
+                <Link href="/marketplace" className="btn-primary" id="explore-marketplace-btn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                  </svg>
+                  Explore Marketplace
+                </Link>
+                <Link href="/dashboard" className="btn-secondary" id="open-dashboard-btn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
+                  </svg>
+                  Open Dashboard
+                </Link>
               </div>
             </div>
 
-            {/* Right: escrow receipt artifact — dark plaque for contrast on the light canvas */}
+            {/* Right: Receipt Artifact */}
             <div ref={receipt.ref} className={`flex justify-center ll-receipt-stage ${receipt.visible ? 'll-receipt-in' : ''}`} aria-hidden="true">
               <div className="ll-receipt">
                 <div className="ll-receipt-head">
@@ -230,147 +255,52 @@ export default function LandingPage() {
       {/* ── Feature Ledger ───────────────────────────────────────────────────── */}
       <section style={{ paddingTop: 'var(--spacing-12)', paddingBottom: 'var(--spacing-12)' }} id="features">
         <div className="container-wide">
-          <div className="text-center" style={{ maxWidth: 640, margin: '0 auto var(--spacing-6)' }}>
-            <p className="type-caption" style={{ color: 'var(--color-accent)', marginBottom: 12 }}>REGISTER OF CAPABILITIES</p>
-            <h2 className="type-display-lg" style={{ color: 'var(--color-ink)', marginBottom: 'var(--spacing-2)' }}>
-              The Escrow Primitive Stellar Was Missing
-            </h2>
-            <p className="type-body" style={{ color: 'var(--color-ink-muted)', maxWidth: '58ch', margin: '0 auto' }}>
-              Stellar&apos;s native claimable balances support conditional release — but not
-              bilateral confirmation, dispute freezing, or milestone-based partial releases.
-              LumenLock fills that gap.
-            </p>
+          <div className="text-center" style={{ maxWidth: 700, margin: '0 auto var(--spacing-8)' }}>
+            <p className="type-caption" style={{ color: 'var(--color-accent)', marginBottom: 'var(--spacing-2)' }}>REGISTER OF CAPABILITIES</p>
+            <h2 className="type-display-lg" style={{ color: 'var(--color-ink)', marginBottom: 'var(--spacing-3)' }}>The Escrow Primitive Stellar Was Missing</h2>
+            <p className="type-body" style={{ color: 'var(--color-ink-muted)' }}>Stellar's native claimable balances support conditional release — but not bilateral confirmation, dispute freezing, or milestone-based partial releases. LumenLock fills that gap.</p>
           </div>
 
-          <div className="ll-ledger">
-            {features.map((feature, i) => <FeatureItem key={feature.title} feature={feature} delay={i * 60} />)}
-          </div>
-        </div>
-      </section>
-
-      {/* ── How It Works ─────────────────────────────────────────────────────── */}
-      <section style={{ paddingTop: 'var(--spacing-12)', paddingBottom: 'var(--spacing-12)', backgroundColor: 'var(--color-surface)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }} id="how-it-works">
-        <div className="container-wide">
-          <div className="text-center" style={{ maxWidth: 640, margin: '0 auto var(--spacing-6)' }}>
-            <p className="type-caption" style={{ color: 'var(--color-ink-faint)', marginBottom: 12 }}>THE SETTLEMENT TRAIL</p>
-            <h2 className="type-display-lg" style={{ color: 'var(--color-ink)', marginBottom: 'var(--spacing-1)' }}>How It Works</h2>
-            <p className="type-body" style={{ color: 'var(--color-ink-muted)' }}>Four steps from listing to settlement.</p>
-          </div>
-
-          <div ref={hiw.ref} className={`ll-trail ${hiw.visible ? 'll-fade-up' : 'll-hidden'}`}>
-            {howItWorks.map((step, i) => (
-              <div key={step.step} className="ll-trail-row">
-                <div className="ll-trail-marker">
-                  {step.sealed ? <Seal size={36} active={hiw.visible} tone="accent" /> : <span className="type-mono-sm">{step.step}</span>}
-                </div>
-                {i < howItWorks.length - 1 && <div className="ll-trail-line" />}
-                <div className="ll-trail-body">
-                  <h3 className="type-heading" style={{ color: 'var(--color-ink)', marginBottom: 6 }}>{step.title}</h3>
-                  <p className="type-body-sm" style={{ color: 'var(--color-ink-muted)' }}>{step.description}</p>
-                </div>
-              </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'var(--spacing-4)' }}>
+            {features.map((feature, i) => (
+              <FeatureItem key={feature.n} feature={feature} delay={i * 80} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA Band ─────────────────────────────────────────────────────────── */}
-      <section className="ll-cta">
-        <div className="ll-cta-seal-watermark" aria-hidden="true"><Seal size={320} tone="invert" /></div>
-        <div className="container-wide relative z-10">
-          <div className="ll-cta-inner">
-            <p className="type-caption" style={{ color: 'var(--color-accent)', marginBottom: 'var(--spacing-2)' }}>GET STARTED TODAY</p>
-            <h2 className="type-display-lg" style={{ color: 'var(--color-ink)', marginBottom: 'var(--spacing-3)' }}>Ready to transact trustlessly?</h2>
-            <p className="type-body" style={{ color: 'var(--color-ink-muted)', maxWidth: '48ch', marginBottom: 'var(--spacing-4)' }}>
-              Connect your Stellar wallet and start buying or selling on the decentralized
-              marketplace. Every trade is protected by an on-chain escrow vault.
-            </p>
-            <Link href="/marketplace" className="btn-primary" id="cta-marketplace-btn">Get Started →</Link>
+      {/* ── How It Works ───────────────────────────────────────────────────── */}
+      <section style={{ paddingTop: 'var(--spacing-12)', paddingBottom: 'var(--spacing-12)', backgroundColor: 'var(--color-surface)' }} ref={hiw.ref}>
+        <div className="container-wide">
+          <div className="text-center" style={{ maxWidth: 700, margin: '0 auto var(--spacing-8)' }}>
+            <p className="type-caption" style={{ color: 'var(--color-accent)', marginBottom: 'var(--spacing-2)' }}>THE SETTLEMENT TRAIL</p>
+            <h2 className="type-display-lg" style={{ color: 'var(--color-ink)' }}>How It Works</h2>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 'var(--spacing-4)' }}>
+            {howItWorks.map((item, i) => (
+              <HowItWorksStep key={item.step} item={item} index={i} />
+            ))}
           </div>
         </div>
       </section>
 
-      <style jsx>{`
-        .ll-hero-grid {
-          position: absolute; inset: 0; pointer-events: none;
-          background-image: linear-gradient(rgba(11,13,16,0.035) 1px, transparent 1px),
-                             linear-gradient(90deg, rgba(11,13,16,0.035) 1px, transparent 1px);
-          background-size: 56px 56px;
-          mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
-        }
-
-        .ll-fade-slot { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
-        .ll-fade-slot.ll-in { opacity: 1; transform: translateY(0); }
-
-        .ll-receipt-stage { opacity: 0; transform: translateY(24px) rotate(0deg); transition: opacity 0.7s ease, transform 0.7s ease; }
-        .ll-receipt-stage.ll-receipt-in { opacity: 1; transform: translateY(0) rotate(-2.5deg); }
-        .ll-receipt {
-          position: relative;
-          width: 340px;
-          background: var(--color-invert-bg);
-          color: var(--color-invert-ink);
-          padding: 26px 24px 30px;
-          border-radius: var(--radius-lg);
-          box-shadow: var(--shadow-dropdown);
-        }
-        .ll-receipt-head { display: flex; justify-content: space-between; opacity: 0.75; margin-bottom: 14px; }
-        .ll-receipt-net { color: var(--color-accent-bright); }
-        .ll-receipt-rule { border-top: 1px dashed var(--color-invert-line); margin: 12px 0; }
-        .ll-receipt-row { display: flex; align-items: baseline; font-size: 0.85rem; margin-bottom: 9px; gap: 8px; }
-        .ll-receipt-row > span:first-child { flex-shrink: 0; opacity: 0.65; }
-        .ll-receipt-row > span:last-child { flex-shrink: 0; }
-        .ll-leader { flex: 1; border-bottom: 1px dotted var(--color-invert-line); position: relative; top: -3px; }
-        .ll-receipt-status { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
-        .ll-receipt-status-value { color: var(--color-accent-bright); font-weight: 600; letter-spacing: 0.04em; }
-        .ll-receipt-seal { position: absolute; bottom: -20px; right: -16px; }
-
-        .ll-seal { opacity: 0; transform: scale(1.3) rotate(-25deg); transition: opacity 0.5s ease 0.15s, transform 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.15s; }
-        .ll-seal--active { opacity: 1; transform: scale(1) rotate(-8deg); }
-        .ll-seal--accent { color: var(--color-accent); }
-        .ll-seal--invert { color: var(--color-invert-ink); }
-        .ll-seal-ring-outer, .ll-seal-ring-inner { fill: none; stroke: currentColor; stroke-width: 1.4; }
-        .ll-seal-tick { stroke: currentColor; stroke-width: 1.2; }
-        .ll-seal-check { stroke: currentColor; }
-
-        .ll-stat-cell { flex: 1; padding: 8px var(--spacing-3); }
-        .ll-stat-value { display: block; font-size: clamp(1.6rem, 3vw, 2.25rem); color: var(--color-ink); margin-bottom: 6px; }
-
-        .ll-ledger { border-top: 1px solid var(--color-border); }
-        .ll-ledger-item { display: grid; grid-template-columns: 44px 40px 1fr; gap: 20px; align-items: start; padding: 26px 4px; border-bottom: 1px solid var(--color-border); }
-        .ll-ledger-num { color: var(--color-ink-faint); padding-top: 3px; }
-        .ll-ledger-icon { color: var(--color-accent); padding-top: 1px; }
-
-        .ll-hidden { opacity: 0; }
-        .ll-fade-up { animation: llFadeUp 0.6s ease forwards; }
-        @keyframes llFadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
-
-        .ll-trail { max-width: 640px; margin: 0 auto; }
-        .ll-trail-row { display: grid; grid-template-columns: 48px 1fr; column-gap: 22px; position: relative; }
-        .ll-trail-marker {
-          grid-row: 1; width: 48px; height: 48px; border-radius: 50%;
-          border: 1px solid var(--color-border-strong);
-          background: var(--color-bg);
-          display: flex; align-items: center; justify-content: center;
-          color: var(--color-accent); z-index: 1;
-        }
-        .ll-trail-line { grid-column: 1; width: 1px; margin: 0 auto; background: var(--color-border-strong); height: 100%; min-height: 60px; }
-        .ll-trail-body { padding-bottom: 40px; padding-top: 8px; }
-
-        .ll-cta { position: relative; padding: var(--spacing-12) 0; overflow: hidden; background: var(--color-surface); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
-        .ll-cta-seal-watermark { position: absolute; right: -60px; top: 50%; transform: translateY(-50%); opacity: 0.05; }
-        .ll-cta-seal-watermark .ll-seal { opacity: 1; transform: rotate(-6deg); }
-        .ll-cta-inner { max-width: 560px; display: flex; flex-direction: column; align-items: flex-start; }
-
-        @media (max-width: 1023px) { .ll-receipt-stage { margin-top: 48px; } }
-        @media (max-width: 640px) {
-          .ll-ledger-item { grid-template-columns: 32px 32px 1fr; }
-          .ll-trail-row { grid-template-columns: 40px 1fr; }
-          .ll-trail-marker { width: 40px; height: 40px; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .ll-fade-slot, .ll-receipt-stage, .ll-seal, .ll-ledger-item { transition: none !important; animation: none !important; opacity: 1 !important; transform: none !important; }
-        }
-      `}</style>
+      {/* ── CTA Section ────────────────────────────────────────────────────── */}
+      <section style={{ paddingTop: 'var(--spacing-12)', paddingBottom: 'var(--spacing-12)' }}>
+        <div className="container-narrow">
+          <div className="text-center" style={{ maxWidth: 600, margin: '0 auto' }}>
+            <p className="type-caption" style={{ color: 'var(--color-accent)', marginBottom: 'var(--spacing-2)' }}>GET STARTED TODAY</p>
+            <h2 className="type-display-lg" style={{ color: 'var(--color-ink)', marginBottom: 'var(--spacing-4)' }}>Ready to transact trustlessly?</h2>
+            <p className="type-body" style={{ color: 'var(--color-ink-muted)', marginBottom: 'var(--spacing-6)' }}>Connect your Stellar wallet and start buying or selling on the decentralized marketplace. Every trade is protected by an on-chain escrow vault.</p>
+            <Link href="/marketplace" className="btn-primary" id="cta-marketplace-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+              </svg>
+              Get Started
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
