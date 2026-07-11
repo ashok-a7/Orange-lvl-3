@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { QueryClientProvider } from './providers/QueryClientProvider';
 import { Navbar } from './components/layout/Navbar';
 import { ToastContainer } from './components/ui/ToastContainer';
 import './globals.css';
+import './footer.css';
 
 export const metadata: Metadata = {
   title: {
@@ -20,8 +22,6 @@ export const metadata: Metadata = {
     'blockchain',
     'DeFi',
     'smart contracts',
-    'P2P',
-    'trustless',
   ],
   openGraph: {
     type: 'website',
@@ -30,46 +30,55 @@ export const metadata: Metadata = {
     siteName: 'LumenLock',
     title: 'LumenLock — Decentralized Escrow Marketplace on Stellar',
     description: 'Trustless P2P marketplace with Soroban-powered escrow settlement',
-    images: [
-      {
-        url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://lumenlock.dev'}/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: 'LumenLock - Decentralized Escrow Marketplace',
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'LumenLock',
     description: 'Trustless P2P marketplace with Soroban-powered escrow settlement',
-    creator: '@lumenlock',
   },
   robots: {
     index: true,
     follow: true,
-    'max-image-preview': 'large',
-    'max-snippet': -1,
-    'max-video-preview': -1,
-  },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
   },
 };
+
+const footerColumns = [
+  {
+    heading: 'Product',
+    links: [
+      { href: '/marketplace', label: 'Marketplace' },
+      { href: '/dashboard', label: 'Dashboard' },
+      { href: '/activity', label: 'Activity' },
+      { href: '/analytics', label: 'Analytics' },
+    ],
+  },
+  {
+    heading: 'Protocol',
+    links: [
+      { href: '/transactions', label: 'Transactions' },
+      { href: '/settings', label: 'Settings' },
+      { href: 'https://stellar.org', label: 'Built on Stellar', external: true, stellar: true },
+      { href: 'https://www.freighter.app/', label: 'Freighter Wallet', external: true },
+    ],
+  },
+  {
+    heading: 'Trust',
+    links: [
+      { href: '/#how-it-works', label: 'How Escrow Works' },
+      { href: '/#features', label: 'Contract Capabilities' },
+      { href: '/dashboard', label: 'Dispute Resolution' },
+    ],
+  },
+];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <meta charSet="utf-8" />
-        <meta name="theme-color" content="#0A0A0A" />
-        <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
           rel="stylesheet"
         />
       </head>
@@ -83,109 +92,59 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main className="flex-1">{children}</main>
             <ToastContainer />
 
-            {/* Footer */}
-            <footer
-              className="py-8"
-              style={{
-                borderTop: '1px solid var(--color-border)',
-                backgroundColor: 'var(--color-surface)',
-              }}
-            >
+            {/* ── Footer — a closing vault plaque ─────────────────────────────── */}
+            <footer className="ll-footer">
+              <div className="ll-footer-grain" aria-hidden="true" />
+              <div className="ll-footer-glow" aria-hidden="true" />
+
               <div className="container-wide">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                  {/* Logo & Description */}
+                <div className="ll-footer-top">
+                  {/* Brand column */}
                   <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-                        <rect x="1" y="1" width="26" height="26" rx="7" fill="var(--color-trust-soft)" stroke="var(--color-trust)" strokeWidth="1.5" />
-                        <path d="M 10.5 9 A 5 5 0 0 0 10.5 19" stroke="var(--color-trust)" strokeWidth="2" strokeLinecap="round" />
-                        <path d="M 17.5 9 A 5 5 0 0 1 17.5 19" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" />
+                    <Link
+                      href="/"
+                      className="flex items-center gap-2.5"
+                      style={{ textDecoration: 'none', width: 'fit-content' }}
+                      aria-label="LumenLock home"
+                    >
+                      <svg width="26" height="26" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                        <rect x="1" y="1" width="26" height="26" rx="7" fill="rgba(194,138,23,0.14)" stroke="var(--color-accent-bright)" strokeWidth="1.5" />
+                        <path d="M 10.5 9 A 5 5 0 0 0 10.5 19" stroke="rgba(243,238,226,0.7)" strokeWidth="2" strokeLinecap="round" />
+                        <path d="M 17.5 9 A 5 5 0 0 1 17.5 19" stroke="var(--color-accent-bright)" strokeWidth="2" strokeLinecap="round" />
                       </svg>
-                      <span
-                        className="font-bold text-base"
-                        style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
-                      >
-                        LumenLock
-                      </span>
-                    </div>
-                    <p className="type-body-sm" style={{ color: 'var(--color-ink-muted)' }}>
-                      Trustless P2P marketplace with Soroban-powered escrow settlement on Stellar.
+                      <span className="ll-footer-brand-line">LumenLock</span>
+                    </Link>
+                    <p className="ll-footer-tagline">
+                      A Soroban escrow primitive for Stellar — bilateral confirmation,
+                      milestone releases, and arbitrated disputes, sealed on-chain.
                     </p>
                   </div>
 
-                  {/* Quick Links */}
-                  <div>
-                    <h3 className="type-caption" style={{ color: 'var(--color-ink)', marginBottom: 'var(--spacing-2)' }}>
-                      Platform
-                    </h3>
-                    <div className="flex flex-col gap-2">
-                      <a href="/marketplace" className="ll-footer-link">
-                        Marketplace
-                      </a>
-                      <a href="/dashboard" className="ll-footer-link">
-                        Dashboard
-                      </a>
-                      <a href="/activity" className="ll-footer-link">
-                        Activity
-                      </a>
-                      <a href="/transactions" className="ll-footer-link">
-                        Transactions
-                      </a>
+                  {/* Link columns */}
+                  {footerColumns.map((col) => (
+                    <div key={col.heading} className="ll-footer-col">
+                      <p className="ll-footer-heading">{col.heading}</p>
+                      {col.links.map((link) => (
+                        <a
+                          key={link.label}
+                          href={link.href}
+                          target={link.external ? '_blank' : undefined}
+                          rel={link.external ? 'noopener noreferrer' : undefined}
+                          className={`ll-footer-link${link.stellar ? ' ll-footer-link--stellar' : ''}`}
+                        >
+                          {link.label}
+                        </a>
+                      ))}
                     </div>
-                  </div>
-
-                  {/* Resources */}
-                  <div>
-                    <h3 className="type-caption" style={{ color: 'var(--color-ink)', marginBottom: 'var(--spacing-2)' }}>
-                      Resources
-                    </h3>
-                    <div className="flex flex-col gap-2">
-                      <a
-                        href="https://stellar.org"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ll-footer-link ll-footer-link--stellar"
-                      >
-                        Built on Stellar
-                      </a>
-                      <a
-                        href="https://soroban.stellar.org"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ll-footer-link"
-                      >
-                        Soroban Docs
-                      </a>
-                      <a
-                        href="https://stellar.expert"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ll-footer-link"
-                      >
-                        Stellar Expert
-                      </a>
-                    </div>
-                  </div>
+                  ))}
                 </div>
 
-                {/* Divider */}
-                <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: 'var(--spacing-4)' }}>
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <p className="type-body-sm" style={{ color: 'var(--color-ink-faint)' }}>
-                      © {new Date().getFullYear()} LumenLock. All rights reserved.
-                    </p>
-                    <div className="flex items-center gap-4">
-                      <a href="#" className="ll-footer-link" aria-label="Privacy Policy">
-                        Privacy
-                      </a>
-                      <a href="#" className="ll-footer-link" aria-label="Terms of Service">
-                        Terms
-                      </a>
-                      <a href="#" className="ll-footer-link" aria-label="Contact">
-                        Contact
-                      </a>
-                    </div>
-                  </div>
+                <div className="ll-footer-bottom">
+                  <p className="ll-footer-copy">© {new Date().getFullYear()} LumenLock. Settled on Stellar.</p>
+                  <span className="ll-footer-status">
+                    <span className="ll-footer-status-dot" aria-hidden="true" />
+                    Testnet contracts live
+                  </span>
                 </div>
               </div>
             </footer>
