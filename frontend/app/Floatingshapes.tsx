@@ -2,7 +2,7 @@
 
 /**
  * FloatingShapes — a small constellation of rotating outline geometry
- * (hexagons + rings, echoing Soroban's honeycomb contracts and the
+ * (hexagons + rings, echoing Soroban's honeycomb contracts and
  * original LumenLock seal) that drifts gently behind hero content.
  *
  * Pure SVG + CSS keyframes (geo-spin / geo-spin-rev / geo-drift, defined
