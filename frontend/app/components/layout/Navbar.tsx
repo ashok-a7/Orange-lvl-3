@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useWallet } from '../../hooks/useWallet';
 import { formatAddress } from '../../types';
 import {
@@ -32,17 +33,29 @@ const navItems = [
   { href: '/analytics',   label: 'Analytics',    icon: BarChart3 },
 ];
 
-/** The signature interlocking-seal wordmark, reused at nav scale. */
-function Wordmark({ size = 28 }: { size?: number }) {
+/** The signature interlocking-ring wordmark, reused at nav scale. */
+function Wordmark({ size = 30 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 28 28" fill="none" aria-hidden="true" className="shrink-0">
-      <rect x="1" y="1" width="26" height="26" rx="7" fill="url(#navGoldFade)" stroke="var(--color-accent-bright)" strokeWidth="1.4" />
-      <path d="M 10.5 9 A 5 5 0 0 0 10.5 19" stroke="var(--color-trust)" strokeWidth="2" strokeLinecap="round" />
-      <path d="M 17.5 9 A 5 5 0 0 1 17.5 19" stroke="var(--color-accent-bright)" strokeWidth="2" strokeLinecap="round" />
+      <rect x="1" y="1" width="26" height="26" rx="8" fill="url(#navFillFade)" stroke="url(#navStrokeFade)" strokeWidth="1.3" />
+      <path d="M 10.3 8.7 A 5.1 5.1 0 0 0 10.3 19.3" stroke="url(#navRingA)" strokeWidth="2" strokeLinecap="round" />
+      <path d="M 17.7 8.7 A 5.1 5.1 0 0 1 17.7 19.3" stroke="url(#navRingB)" strokeWidth="2" strokeLinecap="round" />
       <defs>
-        <linearGradient id="navGoldFade" x1="0" y1="0" x2="28" y2="28">
-          <stop offset="0%" stopColor="rgba(194,138,23,0.16)" />
-          <stop offset="100%" stopColor="rgba(43,75,199,0.08)" />
+        <linearGradient id="navFillFade" x1="0" y1="0" x2="28" y2="28">
+          <stop offset="0%" stopColor="rgba(124,92,252,0.22)" />
+          <stop offset="100%" stopColor="rgba(63,224,197,0.10)" />
+        </linearGradient>
+        <linearGradient id="navStrokeFade" x1="0" y1="0" x2="28" y2="28">
+          <stop offset="0%" stopColor="#9B82FF" />
+          <stop offset="100%" stopColor="#3FE0C5" />
+        </linearGradient>
+        <linearGradient id="navRingA" x1="5" y1="8" x2="16" y2="20">
+          <stop offset="0%" stopColor="#9B82FF" />
+          <stop offset="100%" stopColor="#5B3FE0" />
+        </linearGradient>
+        <linearGradient id="navRingB" x1="12" y1="8" x2="23" y2="20">
+          <stop offset="0%" stopColor="#F5BE5C" />
+          <stop offset="100%" stopColor="#E8A63D" />
         </linearGradient>
       </defs>
     </svg>
@@ -107,16 +120,19 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Close mobile drawer on route change
+  useEffect(() => { setMobileOpen(false); }, [pathname]);
+
   return (
     <>
       <header
         className="sticky top-0 z-50 transition-shadow duration-300"
         style={{
-          backgroundColor: scrolled ? 'rgba(9, 10, 12, 0.82)' : 'rgba(9, 10, 12, 0.68)',
-          backdropFilter: 'blur(14px) saturate(140%)',
-          WebkitBackdropFilter: 'blur(14px) saturate(140%)',
-          borderBottom: scrolled ? '1px solid rgba(194,138,23,0.16)' : '1px solid var(--color-invert-line)',
-          boxShadow: scrolled ? '0 12px 32px rgba(0,0,0,0.28)' : 'none',
+          backgroundColor: scrolled ? 'rgba(6,6,15,0.78)' : 'rgba(6,6,15,0.42)',
+          backdropFilter: scrolled ? 'blur(20px) saturate(180%)' : 'blur(14px) saturate(150%)',
+          WebkitBackdropFilter: scrolled ? 'blur(20px) saturate(180%)' : 'blur(14px) saturate(150%)',
+          borderBottom: scrolled ? '1px solid rgba(124,92,252,0.22)' : '1px solid var(--glass-border)',
+          boxShadow: scrolled ? '0 12px 40px rgba(0,0,0,0.4)' : 'none',
         }}
       >
         <div className="container-wide nav-row justify-between">
@@ -127,15 +143,15 @@ export function Navbar() {
             style={{ textDecoration: 'none' }}
             aria-label="LumenLock home"
           >
-            <div className="transition-transform duration-200 group-hover:scale-105 group-hover:rotate-3">
+            <div className="transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">
               <Wordmark />
             </div>
             <span
+              className="text-gradient-violet"
               style={{
                 fontFamily: 'var(--font-display)',
                 fontWeight: 700,
                 fontSize: '1.1rem',
-                color: 'var(--color-invert-ink)',
                 letterSpacing: '-0.02em',
                 whiteSpace: 'nowrap',
               }}
@@ -144,8 +160,12 @@ export function Navbar() {
             </span>
           </Link>
 
-          {/* ── Desktop Nav ── */}
-          <div className="hidden md:flex items-center gap-1" role="menubar">
+          {/* ── Desktop Nav — glass capsule with a sliding active pill ── */}
+          <div
+            className="hidden md:flex items-center gap-0.5 glass-chip"
+            role="menubar"
+            style={{ padding: '5px' }}
+          >
             {navItems.map(({ href, label, icon: Icon }) => {
               const active = isActive(href);
               return (
@@ -153,12 +173,36 @@ export function Navbar() {
                   key={href}
                   href={href}
                   role="menuitem"
-                  className="dark-nav-item"
-                  data-active={active || undefined}
+                  className="relative flex items-center gap-1.5 whitespace-nowrap"
+                  style={{
+                    fontFamily: 'var(--font-ui)',
+                    fontSize: '0.85rem',
+                    fontWeight: 500,
+                    padding: '7px 14px',
+                    borderRadius: 'var(--radius-pill)',
+                    color: active ? 'var(--color-ink)' : 'var(--color-ink-muted)',
+                    textDecoration: 'none',
+                    transition: 'color 0.2s ease',
+                  }}
                   aria-current={active ? 'page' : undefined}
                 >
-                  <Icon className="shrink-0" style={{ width: 15, height: 15 }} />
-                  {label}
+                  {active && (
+                    <motion.span
+                      layoutId="nav-active-pill"
+                      className="absolute inset-0"
+                      style={{
+                        borderRadius: 'var(--radius-pill)',
+                        background: 'var(--glass-bg-strong)',
+                        border: '1px solid var(--glass-border-strong)',
+                        boxShadow: '0 0 0 1px rgba(124,92,252,0.15), 0 4px 16px rgba(124,92,252,0.18)',
+                      }}
+                      transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+                    />
+                  )}
+                  <span className="relative z-10 flex items-center gap-1.5">
+                    <Icon className="shrink-0" style={{ width: 14, height: 14 }} />
+                    {label}
+                  </span>
                 </Link>
               );
             })}
@@ -170,10 +214,10 @@ export function Navbar() {
             {/* Settings icon (desktop only) */}
             <Link
               href="/settings"
-              className="dark-icon-btn hidden md:flex items-center justify-center shrink-0"
+              className="glass-icon-btn hidden md:flex items-center justify-center shrink-0"
               aria-label="Settings"
             >
-              <Settings className="shrink-0" style={{ width: 17, height: 17 }} />
+              <Settings className="shrink-0" style={{ width: 16, height: 16 }} />
             </Link>
 
             {/* Wallet Button — 3 states */}
@@ -182,24 +226,29 @@ export function Navbar() {
               <div className="relative" ref={walletMenuRef}>
                 <button
                   onClick={() => setWalletMenuOpen(!walletMenuOpen)}
-                  className="dark-wallet-pill flex items-center gap-2"
+                  className="glass-wallet-pill flex items-center gap-2"
                   id="wallet-menu-button"
                   aria-expanded={walletMenuOpen}
                   aria-haspopup="true"
                   aria-controls="wallet-dropdown"
                 >
-                  <div
-                    className="rounded-full shrink-0"
-                    style={{ width: 7, height: 7, backgroundColor: 'var(--color-success)', boxShadow: '0 0 0 3px rgba(22,130,74,0.22)', flexShrink: 0 }}
-                    aria-hidden="true"
-                  />
+                  <span className="relative flex shrink-0" style={{ width: 7, height: 7 }} aria-hidden="true">
+                    <span
+                      className="absolute inline-flex h-full w-full rounded-full opacity-60"
+                      style={{ backgroundColor: 'var(--color-success)', animation: 'ping 2s cubic-bezier(0,0,0.2,1) infinite' }}
+                    />
+                    <span
+                      className="relative inline-flex rounded-full"
+                      style={{ width: 7, height: 7, backgroundColor: 'var(--color-success)' }}
+                    />
+                  </span>
                   <span className="hidden sm:block">{formatAddress(address)}</span>
                   {isTestnet && (
                     <span
                       className="hidden sm:block badge-base"
                       style={{
-                        background: 'rgba(166,101,10,0.18)',
-                        color: '#E3A23B',
+                        background: 'var(--color-accent-soft)',
+                        color: 'var(--color-accent-bright)',
                         fontSize: '0.65rem',
                         padding: '1px 6px',
                       }}
@@ -213,83 +262,91 @@ export function Navbar() {
                   />
                 </button>
 
-                {walletMenuOpen && (
-                  <div
-                    id="wallet-dropdown"
-                    className="absolute right-0 mt-2 w-64 py-2 animate-fade-up"
-                    style={{
-                      background: 'var(--color-surface-raised)',
-                      border: '1px solid var(--color-border-strong)',
-                      borderRadius: 'var(--radius-lg)',
-                      boxShadow: 'var(--shadow-dropdown)',
-                      zIndex: 100,
-                    }}
-                    role="menu"
-                  >
-                    {/* Full address */}
-                    <div
-                      className="px-4 py-3"
-                      style={{ borderBottom: '1px solid var(--color-border)' }}
+                <AnimatePresence>
+                  {walletMenuOpen && (
+                    <motion.div
+                      id="wallet-dropdown"
+                      className="absolute right-0 mt-2 w-64 py-2"
+                      initial={{ opacity: 0, y: -6, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                      transition={{ duration: 0.16, ease: [0.2, 0.8, 0.2, 1] }}
+                      style={{
+                        background: 'var(--color-surface-raised)',
+                        border: '1px solid var(--glass-border-strong)',
+                        borderRadius: 'var(--radius-lg)',
+                        boxShadow: 'var(--shadow-dropdown)',
+                        backdropFilter: 'blur(24px) saturate(160%)',
+                        WebkitBackdropFilter: 'blur(24px) saturate(160%)',
+                        zIndex: 100,
+                      }}
+                      role="menu"
                     >
-                      <p className="type-caption mb-1" style={{ color: 'var(--color-ink-faint)' }}>
-                        Connected Wallet
-                      </p>
-                      <p
-                        className="text-xs break-all leading-relaxed"
-                        style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-mono)' }}
+                      {/* Full address */}
+                      <div
+                        className="px-4 py-3"
+                        style={{ borderBottom: '1px solid var(--color-border)' }}
                       >
-                        {address}
-                      </p>
-                    </div>
+                        <p className="type-caption mb-1" style={{ color: 'var(--color-ink-faint)' }}>
+                          Connected Wallet
+                        </p>
+                        <p
+                          className="text-xs break-all leading-relaxed"
+                          style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-mono)' }}
+                        >
+                          {address}
+                        </p>
+                      </div>
 
-                    {/* Copy address */}
-                    <button
-                      onClick={copyAddress}
-                      className="flex items-center gap-2 w-full px-4 py-2 text-sm transition-colors"
-                      style={{ color: 'var(--color-ink-muted)', fontFamily: 'var(--font-ui)' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-surface)')}
-                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-                      role="menuitem"
-                      aria-label="Copy wallet address"
-                    >
-                      {copied ? (
-                        <Check className="shrink-0" style={{ width: 15, height: 15, color: 'var(--color-success)' }} />
-                      ) : (
-                        <Copy className="shrink-0" style={{ width: 15, height: 15 }} />
-                      )}
-                      {copied ? 'Copied!' : 'Copy Address'}
-                    </button>
-
-                    {/* View on explorer */}
-                    <button
-                      onClick={openExplorer}
-                      className="flex items-center gap-2 w-full px-4 py-2 text-sm transition-colors"
-                      style={{ color: 'var(--color-ink-muted)', fontFamily: 'var(--font-ui)' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-surface)')}
-                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-                      role="menuitem"
-                      aria-label="View wallet on Stellar Explorer"
-                    >
-                      <ExternalLink className="shrink-0" style={{ width: 15, height: 15 }} />
-                      View on Explorer
-                    </button>
-
-                    {/* Disconnect */}
-                    <div style={{ borderTop: '1px solid var(--color-border)' }} className="mt-1 pt-1">
+                      {/* Copy address */}
                       <button
-                        onClick={() => { disconnect(); setWalletMenuOpen(false); }}
+                        onClick={copyAddress}
                         className="flex items-center gap-2 w-full px-4 py-2 text-sm transition-colors"
-                        style={{ color: 'var(--color-danger)', fontFamily: 'var(--font-ui)' }}
-                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-danger-soft)')}
+                        style={{ color: 'var(--color-ink-muted)', fontFamily: 'var(--font-ui)' }}
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)')}
                         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
                         role="menuitem"
+                        aria-label="Copy wallet address"
                       >
-                        <LogOut className="shrink-0" style={{ width: 15, height: 15 }} />
-                        Disconnect
+                        {copied ? (
+                          <Check className="shrink-0" style={{ width: 15, height: 15, color: 'var(--color-success)' }} />
+                        ) : (
+                          <Copy className="shrink-0" style={{ width: 15, height: 15 }} />
+                        )}
+                        {copied ? 'Copied!' : 'Copy Address'}
                       </button>
-                    </div>
-                  </div>
-                )}
+
+                      {/* View on explorer */}
+                      <button
+                        onClick={openExplorer}
+                        className="flex items-center gap-2 w-full px-4 py-2 text-sm transition-colors"
+                        style={{ color: 'var(--color-ink-muted)', fontFamily: 'var(--font-ui)' }}
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)')}
+                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                        role="menuitem"
+                        aria-label="View wallet on Stellar Explorer"
+                      >
+                        <ExternalLink className="shrink-0" style={{ width: 15, height: 15 }} />
+                        View on Explorer
+                      </button>
+
+                      {/* Disconnect */}
+                      <div style={{ borderTop: '1px solid var(--color-border)' }} className="mt-1 pt-1">
+                        <button
+                          onClick={() => { disconnect(); setWalletMenuOpen(false); }}
+                          className="flex items-center gap-2 w-full px-4 py-2 text-sm transition-colors"
+                          style={{ color: 'var(--color-danger)', fontFamily: 'var(--font-ui)' }}
+                          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-danger-soft)')}
+                          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                          role="menuitem"
+                        >
+                          <LogOut className="shrink-0" style={{ width: 15, height: 15 }} />
+                          Disconnect
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
             ) : status === 'connecting' ? (
@@ -320,7 +377,7 @@ export function Navbar() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="dark-icon-btn md:hidden flex items-center justify-center"
+              className="glass-icon-btn md:hidden flex items-center justify-center"
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileOpen}
               aria-controls="mobile-nav"
@@ -338,9 +395,9 @@ export function Navbar() {
           <div
             className="flex items-center justify-center gap-2 px-4 text-sm font-medium"
             style={{
-              backgroundColor: 'rgba(199,54,42,0.16)',
-              borderTop: '1px solid rgba(199,54,42,0.22)',
-              color: '#E8776C',
+              backgroundColor: 'rgba(242,107,107,0.14)',
+              borderTop: '1px solid rgba(242,107,107,0.25)',
+              color: '#F8A6A6',
               fontFamily: 'var(--font-ui)',
               height: '40px',
             }}
@@ -360,200 +417,209 @@ export function Navbar() {
         )}
 
         <style jsx>{`
-          .dark-nav-item {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            white-space: nowrap;
-            font-family: var(--font-ui);
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: rgba(243, 238, 226, 0.56);
-            text-decoration: none;
-            padding: 7px 12px;
-            border-radius: var(--radius-md);
-            position: relative;
-            transition: color 0.15s ease, background 0.15s ease;
-          }
-          .dark-nav-item:hover { color: var(--color-invert-ink); background: rgba(255,255,255,0.06); }
-          .dark-nav-item[data-active] { color: var(--color-invert-ink); }
-          .dark-nav-item[data-active]::after {
-            content: '';
-            position: absolute;
-            left: 12px;
-            right: 12px;
-            bottom: 1px;
-            height: 2px;
-            border-radius: 2px;
-            background: var(--gradient-gold);
-          }
-          .dark-icon-btn {
+          .glass-icon-btn {
             width: 36px;
             height: 36px;
             border-radius: var(--radius-md);
-            border: 1px solid var(--color-invert-line);
-            color: rgba(243, 238, 226, 0.6);
-            transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            color: var(--color-ink-muted);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
           }
-          .dark-icon-btn:hover {
-            color: var(--color-invert-ink);
-            border-color: rgba(194,138,23,0.4);
-            background: rgba(255,255,255,0.05);
+          .glass-icon-btn:hover {
+            color: var(--color-ink);
+            border-color: var(--color-accent2-border);
+            background: var(--glass-bg-strong);
+            transform: translateY(-1px);
           }
-          .dark-wallet-pill {
-            background-color: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.14);
+          .glass-wallet-pill {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border-strong);
             border-radius: var(--radius-pill);
-            color: var(--color-invert-ink);
+            color: var(--color-ink);
             font-family: var(--font-mono);
             font-size: 0.8125rem;
             padding: 7px 14px;
             height: 36px;
             cursor: pointer;
-            transition: border-color 0.15s ease, background 0.15s ease;
+            backdrop-filter: blur(16px) saturate(160%);
+            -webkit-backdrop-filter: blur(16px) saturate(160%);
+            transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
           }
-          .dark-wallet-pill:hover {
-            border-color: rgba(194,138,23,0.45);
-            background-color: rgba(255,255,255,0.09);
+          .glass-wallet-pill:hover {
+            border-color: var(--color-accent2-border);
+            background: var(--glass-bg-strong);
+            box-shadow: 0 0 0 1px rgba(124,92,252,0.12), 0 6px 20px rgba(124,92,252,0.14);
+          }
+          @keyframes ping {
+            75%, 100% { transform: scale(2.2); opacity: 0; }
           }
         `}</style>
       </header>
 
       {/* Mobile Drawer Overlay */}
-      {mobileOpen && (
-        <div
-          className="fixed inset-0 z-40 md:hidden"
-          aria-hidden="true"
-          style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
-          onClick={() => setMobileOpen(false)}
-        />
-      )}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            className="fixed inset-0 z-40 md:hidden"
+            aria-hidden="true"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            style={{ backgroundColor: 'rgba(2,2,8,0.7)', backdropFilter: 'blur(4px)' }}
+            onClick={() => setMobileOpen(false)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Mobile Slide-out Drawer */}
-      <nav
-        id="mobile-nav"
-        className={`fixed top-0 left-0 h-full w-72 z-50 md:hidden flex flex-col transition-transform duration-300 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}
-        style={{ backgroundColor: 'var(--color-invert-bg)', boxShadow: 'var(--shadow-vault)' }}
-        aria-label="Mobile navigation"
-        aria-hidden={!mobileOpen}
-      >
-        {/* Drawer Header */}
-        <div
-          className="flex items-center justify-between px-5 shrink-0"
-          style={{ height: '64px', borderBottom: '1px solid var(--color-invert-line)' }}
-        >
-          <Link
-            href="/"
-            onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-2.5"
-            style={{ textDecoration: 'none' }}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.nav
+            id="mobile-nav"
+            className="fixed top-0 left-0 h-full w-72 z-50 md:hidden flex flex-col"
+            initial={{ x: '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            transition={{ type: 'spring', stiffness: 340, damping: 34 }}
+            style={{
+              background: 'rgba(9,9,22,0.92)',
+              backdropFilter: 'blur(28px) saturate(160%)',
+              WebkitBackdropFilter: 'blur(28px) saturate(160%)',
+              borderRight: '1px solid var(--glass-border-strong)',
+              boxShadow: 'var(--shadow-vault)',
+            }}
+            aria-label="Mobile navigation"
           >
-            <Wordmark size={24} />
-            <span style={{ fontFamily: 'var(--font-display)', color: 'var(--color-invert-ink)', fontWeight: 700 }}>
-              LumenLock
-            </span>
-          </Link>
-          <button
-            onClick={() => setMobileOpen(false)}
-            className="p-2 rounded-lg"
-            style={{ color: 'rgba(243,238,226,0.6)' }}
-            aria-label="Close menu"
-          >
-            <X style={{ width: 20, height: 20 }} />
-          </button>
-        </div>
-
-        {/* Nav Links */}
-        <div className="flex-1 overflow-y-auto py-3 px-3">
-          {navItems.map(({ href, label, icon: Icon }) => {
-            const active = isActive(href);
-            return (
+            {/* Drawer Header */}
+            <div
+              className="flex items-center justify-between px-5 shrink-0"
+              style={{ height: '64px', borderBottom: '1px solid var(--color-invert-line)' }}
+            >
               <Link
-                key={href}
-                href={href}
+                href="/"
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-3 w-full mb-1 rounded-lg"
+                className="flex items-center gap-2.5"
+                style={{ textDecoration: 'none' }}
+              >
+                <Wordmark size={26} />
+                <span style={{ fontFamily: 'var(--font-display)', color: 'var(--color-invert-ink)', fontWeight: 700 }}>
+                  LumenLock
+                </span>
+              </Link>
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="p-2 rounded-lg"
+                style={{ color: 'rgba(245,243,255,0.6)' }}
+                aria-label="Close menu"
+              >
+                <X style={{ width: 20, height: 20 }} />
+              </button>
+            </div>
+
+            {/* Nav Links */}
+            <div className="flex-1 overflow-y-auto py-3 px-3">
+              {navItems.map(({ href, label, icon: Icon }, i) => {
+                const active = isActive(href);
+                return (
+                  <motion.div
+                    key={href}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.04 * i, duration: 0.25, ease: [0.2, 0.8, 0.2, 1] }}
+                  >
+                    <Link
+                      href={href}
+                      onClick={() => setMobileOpen(false)}
+                      className="flex items-center gap-3 w-full mb-1 rounded-lg"
+                      style={{
+                        padding: '11px 12px',
+                        fontSize: '0.9375rem',
+                        fontFamily: 'var(--font-ui)',
+                        fontWeight: 500,
+                        textDecoration: 'none',
+                        color: active ? 'var(--color-invert-ink)' : 'rgba(245,243,255,0.6)',
+                        background: active ? 'var(--color-accent2-soft)' : 'transparent',
+                        border: active ? '1px solid var(--color-accent2-border)' : '1px solid transparent',
+                      }}
+                      aria-current={active ? 'page' : undefined}
+                    >
+                      <Icon
+                        className="shrink-0"
+                        style={{
+                          width: 17,
+                          height: 17,
+                          color: active ? 'var(--color-accent2-bright)' : 'rgba(245,243,255,0.4)',
+                        }}
+                      />
+                      {label}
+                    </Link>
+                  </motion.div>
+                );
+              })}
+              <Link
+                href="/settings"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-3 w-full rounded-lg"
                 style={{
                   padding: '11px 12px',
                   fontSize: '0.9375rem',
                   fontFamily: 'var(--font-ui)',
                   fontWeight: 500,
                   textDecoration: 'none',
-                  color: active ? 'var(--color-invert-ink)' : 'rgba(243,238,226,0.6)',
-                  background: active ? 'rgba(194,138,23,0.14)' : 'transparent',
+                  color: 'rgba(245,243,255,0.6)',
                 }}
-                aria-current={active ? 'page' : undefined}
               >
-                <Icon
-                  className="shrink-0"
-                  style={{
-                    width: 17,
-                    height: 17,
-                    color: active ? 'var(--color-accent-bright)' : 'rgba(243,238,226,0.4)',
-                  }}
-                />
-                {label}
+                <Settings className="shrink-0" style={{ width: 17, height: 17, color: 'rgba(245,243,255,0.4)' }} />
+                Settings
               </Link>
-            );
-          })}
-          <Link
-            href="/settings"
-            onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-3 w-full rounded-lg"
-            style={{
-              padding: '11px 12px',
-              fontSize: '0.9375rem',
-              fontFamily: 'var(--font-ui)',
-              fontWeight: 500,
-              textDecoration: 'none',
-              color: 'rgba(243,238,226,0.6)',
-            }}
-          >
-            <Settings className="shrink-0" style={{ width: 17, height: 17, color: 'rgba(243,238,226,0.4)' }} />
-            Settings
-          </Link>
-        </div>
-
-        {/* Drawer Footer: Wallet */}
-        <div
-          className="px-4 py-4 shrink-0"
-          style={{ borderTop: '1px solid var(--color-invert-line)' }}
-        >
-          {isConnected && address ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-2)' }}>
-              <p className="type-caption" style={{ color: 'rgba(243,238,226,0.4)' }}>Connected</p>
-              <p
-                className="text-xs break-all"
-                style={{ color: 'var(--color-invert-ink)', fontFamily: 'var(--font-mono)' }}
-              >
-                {formatAddress(address)}
-              </p>
-              <button
-                onClick={() => { disconnect(); setMobileOpen(false); }}
-                className="w-full text-sm flex items-center justify-center gap-2 rounded-full"
-                style={{
-                  color: '#E8776C',
-                  border: '1px solid rgba(199,54,42,0.35)',
-                  padding: '9px 16px',
-                  background: 'transparent',
-                }}
-              >
-                <LogOut style={{ width: 15, height: 15 }} />
-                Disconnect
-              </button>
             </div>
-          ) : (
-            <button
-              onClick={() => { connect(); setMobileOpen(false); }}
-              disabled={status === 'connecting'}
-              className="btn-primary w-full"
+
+            {/* Drawer Footer: Wallet */}
+            <div
+              className="px-4 py-4 shrink-0"
+              style={{ borderTop: '1px solid var(--color-invert-line)' }}
             >
-              <Wallet style={{ width: 15, height: 15 }} />
-              {status === 'connecting' ? 'Connecting…' : 'Connect Wallet'}
-            </button>
-          )}
-        </div>
-      </nav>
+              {isConnected && address ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-2)' }}>
+                  <p className="type-caption" style={{ color: 'rgba(245,243,255,0.4)' }}>Connected</p>
+                  <p
+                    className="text-xs break-all"
+                    style={{ color: 'var(--color-invert-ink)', fontFamily: 'var(--font-mono)' }}
+                  >
+                    {formatAddress(address)}
+                  </p>
+                  <button
+                    onClick={() => { disconnect(); setMobileOpen(false); }}
+                    className="w-full text-sm flex items-center justify-center gap-2 rounded-full"
+                    style={{
+                      color: '#F8A6A6',
+                      border: '1px solid rgba(242,107,107,0.35)',
+                      padding: '9px 16px',
+                      background: 'transparent',
+                    }}
+                  >
+                    <LogOut style={{ width: 15, height: 15 }} />
+                    Disconnect
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => { connect(); setMobileOpen(false); }}
+                  disabled={status === 'connecting'}
+                  className="btn-primary w-full"
+                >
+                  <Wallet style={{ width: 15, height: 15 }} />
+                  {status === 'connecting' ? 'Connecting…' : 'Connect Wallet'}
+                </button>
+              )}
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </>
   );
 }
