@@ -4,6 +4,8 @@
 >
 > _Stellar Orange Belt Level Application — Production-Ready_
 
+[![CI Pipeline](https://github.com/ashok-a7/Orange-lvl-3/actions/workflows/ci.yml/badge.svg)](https://github.com/ashok-a7/Orange-lvl-3/actions/workflows/ci.yml)
+
 ### 🌐 Live Demo & Deployments
 
 - 🖥️ **Production Web App**: [https://lumenlock.vercel.app](https://lumenlock.vercel.app)
@@ -41,16 +43,12 @@ Here is a 1-2 minute video walk-through demonstrating mobile navigation and wall
 
 https://github.com/user-attachments/assets/9da25713-2af6-4490-aa37-b871a35ed7f7
 
-#### ⚙️ CI/CD Pipeline
-Continuous Integration via GitHub Actions automatically builds the Rust contracts, runs cargo tests, validates TypeScript types, runs Vitest tests, and deploys.
-![GitHub Actions CI/CD Pipeline](./docs/assets/github_actions_cicd.png)
-
 #### 🧪 Passing Test Output
 Our comprehensive test suite validates both smart contracts (Rust/Soroban) and frontend components (Vitest). All tests are currently passing successfully.
 ![Passing Test Outputs](./docs/assets/test_output_cli.png)
 
-[![PR Checks](https://github.com/dev-rps/lumenlock/actions/workflows/pr-checks.yml/badge.svg)](https://github.com/dev-rps/lumenlock/actions/workflows/pr-checks.yml)
-[![Deploy](https://github.com/dev-rps/lumenlock/actions/workflows/deploy.yml/badge.svg)](https://github.com/dev-rps/lumenlock/actions/workflows/deploy.yml)
+[![PR Checks](https://github.com/ashok-a7/lumenlock/actions/workflows/pr-checks.yml/badge.svg)](https://github.com/ashok-a7/Orange-lvl-3/actions/workflows/pr-checks.yml)
+[![Deploy](https://github.com/ashok-a7/lumenlock/actions/workflows/deploy.yml/badge.svg)](https://github.com/ashok-a7/Orange-lvl-3/actions/workflows/deploy.yml)
 
 ---
 
@@ -577,7 +575,7 @@ MIT — See [LICENSE](./LICENSE)
 ---
 
 - **Author**: dev-rps
-- **Repository**: [https://github.com/dev-rps/lumenlock](https://github.com/dev-rps/lumenlock)
+- **Repository**: [https://github.com/dev-rps/lumenlock](https://github.com/ashok-a7/Orange-lvl-3)
 
 ---
 
