@@ -1,8 +1,9 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
 import { QueryClientProvider } from './providers/QueryClientProvider';
 import { Navbar } from './components/layout/Navbar';
 import { ToastContainer } from './components/ui/ToastContainer';
+import { AnimatedBackground } from './components/effects/AnimatedBackground';
 import './globals.css';
 import './footer.css';
 
@@ -42,6 +43,10 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: '#06060F',
+};
+
 const footerColumns = [
   {
     heading: 'Product',
@@ -78,15 +83,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
           rel="stylesheet"
         />
       </head>
       <body style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-ink)', fontFamily: 'var(--font-ui)' }}>
+        <AnimatedBackground />
         <QueryClientProvider>
           <div
             className="min-h-screen flex flex-col"
-            style={{ backgroundColor: 'var(--color-bg)' }}
+            style={{ position: 'relative', zIndex: 1 }}
           >
             <Navbar />
             <main className="flex-1">{children}</main>
@@ -108,9 +114,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                       aria-label="LumenLock home"
                     >
                       <svg width="26" height="26" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-                        <rect x="1" y="1" width="26" height="26" rx="7" fill="rgba(194,138,23,0.14)" stroke="var(--color-accent-bright)" strokeWidth="1.5" />
-                        <path d="M 10.5 9 A 5 5 0 0 0 10.5 19" stroke="rgba(243,238,226,0.7)" strokeWidth="2" strokeLinecap="round" />
-                        <path d="M 17.5 9 A 5 5 0 0 1 17.5 19" stroke="var(--color-accent-bright)" strokeWidth="2" strokeLinecap="round" />
+                        <rect x="1" y="1" width="26" height="26" rx="7" fill="rgba(124,92,252,0.16)" stroke="var(--color-accent2-bright)" strokeWidth="1.5" />
+                        <path d="M 10.5 9 A 5 5 0 0 0 10.5 19" stroke="rgba(245,243,255,0.72)" strokeWidth="2" strokeLinecap="round" />
+                        <path d="M 17.5 9 A 5 5 0 0 1 17.5 19" stroke="var(--color-accent2-bright)" strokeWidth="2" strokeLinecap="round" />
                       </svg>
                       <span className="ll-footer-brand-line">LumenLock</span>
                     </Link>
