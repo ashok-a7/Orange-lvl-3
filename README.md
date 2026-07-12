@@ -48,7 +48,7 @@ Our comprehensive test suite validates both smart contracts (Rust/Soroban) and f
 ![Passing Test Outputs](./docs/assets/test_output_cli.png)
 
 [![PR Checks](https://github.com/ashok-a7/lumenlock/actions/workflows/pr-checks.yml/badge.svg)](https://github.com/ashok-a7/Orange-lvl-3/actions/workflows/pr-checks.yml)
-[![Deploy](https://github.com/ashok-a7/lumenlock/actions/workflows/deploy.yml/badge.svg)](https://github.com/ashok-a7/Orange-lvl-3/actions/workflows/deploy.yml)
+[![Deploy](https://github.com/ashok-a7/lumenlock/actions/workflows/deploy.yml/badge.svg)](https://github.com/ashok-a7/Orange-lvl-3/actions/workflows/ci.yml)
 
 ---
 
@@ -574,8 +574,8 @@ MIT — See [LICENSE](./LICENSE)
 
 ---
 
-- **Author**: dev-rps
-- **Repository**: [https://github.com/dev-rps/lumenlock](https://github.com/ashok-a7/Orange-lvl-3)
+- **Author**: ashok-a7
+- **Repository**: [https://github.com/ashok-a7/Orange-lvl-3](https://github.com/ashok-a7/Orange-lvl-3)
 
 ---
 
