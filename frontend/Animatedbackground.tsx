@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * AnimatedBackground — the ambient motion layer mounted once in the root layout.
+ * AnimatedBackground — the ambient motion layer mounted once in the root layout
  *
  * Composed of four cheap, independently-toggleable layers:
  *  1. A static gradient-mesh wash (pure CSS, no repaint cost)
